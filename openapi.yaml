@@ -1,0 +1,217 @@
+openapi: 3.0.0
+info:
+  title: Mein API-Titel
+  version: 1.0.0
+servers:
+  - url: https://api.meinserver.com/v1
+
+paths:
+  /mein-endpunkt:
+    get:
+      summary: Abruf von allgemeinen Informationen
+      responses:
+        '200':
+          description: Erfolgreiche Antwort
+          content:
+            application/json:
+              example:
+                key: Wert
+              schema:
+                $ref: '#/components/schemas/MeinModell'
+
+  /information:
+    get:
+      summary: Abrufen allgemeiner Daten oder Konfigurationsinformationen
+      responses:
+        '200':
+          description: Erfolgreiche Antwort
+
+  /update:
+    post:
+      summary: Aktualisieren von Informationen
+      description: Wird zum Aktualisieren von Informationen verwendet.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSchema'
+      responses:
+        '200':
+          description: Informationen erfolgreich aktualisiert
+        '400':
+          description: Ungültige Eingabedaten
+
+  /projekte:
+    get:
+      summary: Liste aller Projekte
+      responses:
+        '200':
+          description: Erfolgreiche Antwort
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Projekt'
+    post:
+      summary: Neues Projekt hinzufügen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Projekt'
+      responses:
+        '201':
+          description: Projekt erfolgreich erstellt
+        '400':
+          description: Ungültige Eingabedaten
+
+  /projekte/{projektId}:
+    get:
+      summary: Einzelnes Projekt abrufen
+      parameters:
+        - name: projektId
+          in: path
+          required: true
+          description: ID des Projekts, das abgerufen werden soll
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Erfolgreiche Antwort mit Projektdetails
+        '404':
+          description: Projekt nicht gefunden
+    put:
+      summary: Bestehendes Projekt aktualisieren
+      parameters:
+        - name: projektId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Projekt'
+      responses:
+        '200':
+          description: Projekt erfolgreich aktualisiert
+        '400':
+          description: Ungültige Eingabedaten
+        '404':
+          description: Projekt nicht gefunden
+
+  /users:
+    get:
+      summary: Liste aller Benutzer
+      responses:
+        '200':
+          description: Erfolgreiche Antwort
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Neuen Benutzer erstellen
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Benutzer erfolgreich erstellt
+
+  /users/{userId}:
+    get:
+      summary: Details eines bestimmten Benutzers
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Erfolgreiche Antwort
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      summary: Aktualisieren eines Benutzers
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Benutzer erfolgreich aktualisiert
+
+components:
+  schemas:
+    MeinModell:
+      type: object
+      properties:
+        meinFeld:
+          type: string
+    Projekt:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Eindeutige ID des Projekts. Nur beim Erstellen automatisch generiert.
+        name:
+          type: string
+          description: Name des Projekts. Erforderlich beim Hinzufügen, optional beim Aktualisieren.
+        beschreibung:
+          type: string
+          description: Kurze Beschreibung des Projekts. Optional sowohl beim Hinzufügen als auch beim Aktualisieren.
+        erstellungsdatum:
+          type: string
+          format: date-time
+          description: Datum und Uhrzeit der Projekterstellung. Wird automatisch generiert und kann nicht geändert werden.
+    UpdateSchema:
+      type: object
+      properties:
+        feld1:
+          type: string
+        feld2:
+          type: string
+    User:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: integer
+          description: Eindeutige ID des Benutzers
+        username:
+          type: string
+          description: Benutzername des Benutzers
+          minLength: 3
+          maxLength: 50
+
+security:
+  - jwtAuth: []
+
+components:
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
