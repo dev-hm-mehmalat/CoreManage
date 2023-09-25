@@ -8,10 +8,12 @@ use Illuminate\Mail\Mailable;
 class UpdateNotification extends Mailable
 {
     public $contentMessage;  // Änderung hier
+    public $contendata;
 
-    public function __construct($message)
+    public function __construct($message,$data)
     {
         $this->contentMessage = $message;  // und hier
+        $this->contendata = $data;
     }
 
     public function build()

@@ -39,6 +39,8 @@ Route::get('/servers/create', [ServerController::class, 'create'])->name('server
 Route::post('/servers', [ServerController::class, 'store'])->name('servers.store'); // Route zum Speichern eines Servers
 Route::get('/servers/{id}', [ServerController::class, 'show'])->name('servers.show'); // Route zum Anzeigen eines bestimmten Servers
 Route::delete('/servers/{id}', [ServerController::class, 'destroy'])->name('servers.destroy'); // Route zum Löschen eines Servers
+Route::post('/update-application', 'UpdateController@updateApplication');
+Route::post('/update-application-database', [UpdateController::class, 'updateApplicationInDatabase'])->name('update.database');
 
 // Route zum Aktualisieren von Daten
 Route::post('/update', [UpdateController::class, 'index'])->name('update.index');

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('a', function (Blueprint $table) {
+        Schema::create('application_A', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('docker_container_id'); // Referenz zur docker_containers Tabelle
             $table->string('application_name'); // Name der Anwendung
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('A');
+        Schema::dropIfExists('application_A');
     }
 };

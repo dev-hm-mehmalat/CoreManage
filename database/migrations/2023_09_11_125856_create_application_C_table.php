@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('C', function (Blueprint $table) {
+        Schema::create('application_C', function (Blueprint $table) {
             $table->id();
             $table->timestamps(); // Erstellt "created_at" und "updated_at"
             // Weitere Spalten für die c-Tabelle hier hinzufügen
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('C');
+        Schema::dropIfExists('application_C');
     }
 };

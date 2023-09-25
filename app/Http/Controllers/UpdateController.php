@@ -13,32 +13,36 @@ class UpdateController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $latestVersion = DB::table('applications')->where('name', '=', 'typo3')->latest()->value('version');
+        $content=json_decode($request->getContent(), true);
+        ($content);
+        $latestVersion = DB::table('servers')->where('name', '=', $content['name'])->latest()->value('os_version');
 
-        $updates = DB::table('applications')
-            ->where('version', '<', $latestVersion)
-            ->orWhere('version', '=', $latestVersion)
-            ->get();
+        $updates = DB::table('servers')
+        ->where('os_version', '=>', $latestVersion)
+        ->orWhere('os_version', '=', $latestVersion)
+        ->get();
+
 
         $notifications = [];
 
         foreach ($updates as $update) {
             $data = [
-                'server_id' => $update->server_id,
-                'container_id' => $update->container_id,
-                'application' => $update->application,
-                'version' => $update->version,
-                'new_version' => $latestVersion,
+                'server_id' => $update->id,
+                'ip_address' => $update->ip_address,
+                'version' => $update->os_version,
+                'new_version' => $content['version'],
                 'creation_date' => now(),
+
             ];
 
             $notifications[] = $data;
 
             $this->sendNotification($data);
-        }
 
+        }
+            $this->updateApplicationInDatabase($content);
         return response()->json([
             'success' => true,
             'notifications' => $notifications,
@@ -55,14 +59,14 @@ class UpdateController extends Controller
         $user = DB::table('users')->where('id', $data['server_id'])->first();
 
         $message = sprintf(
-            'Die TYPO3-Version auf dem Server %s (Container %s) muss aktualisiert werden. Die aktuelle Version ist %s, die neue Version ist %s.',
+            'Die TYPO3-Version auf dem Server %s (ip_address %s) muss aktualisiert werden. Die aktuelle Version ist %s, die neue Version ist %s.',
             $data['server_id'],
-            $data['container_id'],
+            $data['ip_address'],
             $data['version'],
             $data['new_version']
         );
 
-        Mail::to($user->email)->send((new UpdateNotification($message)));
+        Mail::to("mehmalat.1986@gmail.com")->send((new UpdateNotification($message,$data)));
     }
 
     /**
@@ -97,4 +101,35 @@ class UpdateController extends Controller
 
         return $result;
     }
+/**
+ * Aktualisiert die Version einer bestimmten Anwendung in der Datenbank.
+ *
+ * @param Request $request
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function updateApplicationInDatabase(array $content)
+{
+    $applicationName = $content['name'];
+    $newVersion = $content['version'];
+
+
+    if (!$applicationName || !$newVersion) {
+        return response()->json(['message' => 'Name und Version sind erforderlich.'], 400);
+    }
+
+    try {
+        $updatedRows = DB::table('servers')
+            ->where('name', $applicationName)
+            ->update(['os_version' => $newVersion]);
+
+        if ($updatedRows > 0) {
+            return response()->json(['message' => 'Anwendung erfolgreich aktualisiert.']);
+        } else {
+            return response()->json(['message' => 'Anwendung nicht gefunden oder keine Änderungen vorgenommen.'], 404);
+        }
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Ein Fehler ist aufgetreten.', 'error' => $e->getMessage()], 500);
+    }
+}
+
 }

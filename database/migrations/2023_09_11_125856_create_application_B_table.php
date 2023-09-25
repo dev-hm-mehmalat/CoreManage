@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('B', function (Blueprint $table) {
+        Schema::create('application_B', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // z.B. 'TYPO3' oder 'Wordpress'
             $table->string('version');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('B');
+        Schema::dropIfExists('application_B');
     }
 };
