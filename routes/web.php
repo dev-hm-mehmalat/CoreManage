@@ -42,21 +42,21 @@ Route::get('/servers/create', [ServerController::class, 'create'])->name('server
 Route::post('/servers', [ServerController::class, 'store'])->name('servers.store'); // Route zum Speichern eines Servers
 Route::get('/servers/{id}', [ServerController::class, 'show'])->name('servers.show'); // Route zum Anzeigen eines bestimmten Servers
 Route::delete('/servers/{id}', [ServerController::class, 'destroy'])->name('servers.destroy'); // Route zum Löschen eines Servers
-Route::post('/update-application', 'UpdateController@updateApplication');
+Route::post('/update-application', [UpdateController::class, 'updateApplication']);
+
 Route::post('/update-application-database', [UpdateController::class, 'updateApplicationInDatabase'])->name('update.database');
 Route::post('/rust-data', [RustDataController::class, 'fetchData']);
-
-Route::post('/speichern', 'DeinController@store')->name('speichern');
-Route::post('/speichern', 'ProjektrustController@store')->name('speichern');
 
 Route::get('/projektrusta/create', [ProjektrustAController::class, 'create'])->name('projektrusta.create');
 Route::post('/projektrusta', [ProjektrustAController::class, 'store'])->name('projektrusta.store');
 Route::get('/projektrusta', [ProjektrustAController::class, 'index'])->name('projektrusta.index');
 
 
-Route::get('/mein-endpunkt', [MeinController::class, 'index']);
-Route::get('/anderer-endpunkt', [MeinController::class, 'andereMethode']);
-Route::get('/erstellen', [MeinController::class, 'create']);
+Route::get('/rust-data', [RustDataController::class, 'index']);
+Route::post('/rust-data', [RustDataController::class, 'store']);
+Route::delete('/rust-data/{id}', [RustDataController::class, 'destroy']);
+
+
 
 
 // Route zum Aktualisieren von Daten

@@ -10,11 +10,12 @@ return new class extends Migration
     {
         Schema::create('projekrusta', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Beispiel für eine Spalte 'name'
-            $table->text('beschreibung'); // Beispiel für eine Spalte 'beschreibung'
-            $table->date('startdatum'); // Beispiel für eine Spalte 'startdatum'
-            $table->date('enddatum'); // Beispiel für eine Spalte 'enddatum'
+            $table->string('data');
+            $table->string('name');
+            $table->string('beschreibung');
+            $table->date('startdatum')->default('2023-10-24'); // Standardwert für das Startdatum
             $table->timestamps();
+
         });
     }
 
