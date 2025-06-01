@@ -1,5 +1,51 @@
-# Laravel115 Projekt
+# CoreManage
 
+**CoreManage** ist eine moderne Laravel-basierte Plattform zur Verwaltung von Anwendungen, Serverdaten, Deployments und Updates. Die Applikation richtet sich an IT-Teams, Systemadministratoren und Entwickler, die eine zentrale, dockerisierte Verwaltungslösung mit integrierter Datenbankanbindung, REST-Schnittstellen und Benutzeroberfläche benötigen.
+
+## ⚙️ Versionen
+
+| Komponente         | Version        |
+|--------------------|----------------|
+| Laravel Framework  | 10.28.0        |
+| DDEV               | v1.22.3        |
+| PHP                | 8.1            |
+| Node.js            | 18             |
+| MariaDB            | 10.4           |
+| Docker-Plattform   | docker-desktop |
+| Router             | Traefik        |
+
+---
+
+## 🛠️ Entwicklungsumgebung
+
+| Attribut                | Wert                                    |
+|-------------------------|-----------------------------------------|
+| Projektpfad             | `~/Software/CoreManage`                 |
+| URL                     | http://coremanage.ddev.site             |
+| phpMyAdmin              | http://coremanage.ddev.site:8037        |
+| Mailpit                 | http://coremanage.ddev.site:8026        |
+| Verbindungstyp Datenbank| PDO                                     |
+
+---
+
+## 🚀 Einrichtung
+
+```bash
+# Projekt starten
+cd ~/Software/CoreManage
+ddev start
+
+# Abhängigkeiten installieren
+composer install
+
+# Umgebungsdatei kopieren
+cp .env.example .env
+
+# App Key generieren
+php artisan key:generate
+
+# Datenbanktabellen erzeugen
+php artisan migrate
 
 **Branch:** `newFunction`
 
@@ -180,7 +226,7 @@ ddev artisan --version
     - Bereit, Verbindungen zu verarbeiten
     - Systemd-Überwachungsintervall auf 10000ms eingestellt
 
-**Status:** 
+**Status:**
 - `child_exit_monitor`: Läuft
 - `php-fpm`: Läuft
 - `nginx`: Läuft
@@ -234,3 +280,44 @@ Mail::to($recipient)->send(new UpdateNotification($message, $data));
   - `components.alert`: Eine Komponente, die Fehlermeldungen anzeigt.
 - **Befehl zum Rendern**: Wird gerendert, wenn der Benutzer `/profile/{user_id}` besucht.
 
+
+
+
+## Endpunkte
+
+Die API stellt folgende Endpunkte zur Verfügung:
+
+- `GET /mein-endpunkt`: Abruf von allgemeinen Informationen.
+- `GET /information`: Abrufen allgemeiner Daten oder Konfigurationsinformationen.
+- `POST /update`: Aktualisieren von Informationen.
+- `GET /projekte`: Liste aller Projekte.
+- `POST /projekte`: Neues Projekt hinzufügen.
+- `GET /projekte/{projektId}`: Einzelnes Projekt abrufen.
+- `PUT /projekte/{projektId}`: Bestehendes Projekt aktualisieren.
+- `GET /users`: Liste aller Benutzer.
+- `POST /users`: Neuen Benutzer erstellen.
+- `GET /users/{userId}`: Details eines bestimmten Benutzers.
+- `PUT /users/{userId}`: Aktualisieren eines Benutzers.
+
+## Schemas
+
+Die API verwendet folgende Schemas für die Anfragen und Antworten:
+
+- `MeinModell`
+- `Projekt`
+- `UpdateSchema`
+- `User`
+
+## Entwicklung und Lokales Testen
+
+Um mit der lokalen Entwicklung und dem Testen der API zu beginnen, folgen Sie diesen Schritten:
+
+1. Klonen Sie das Repository.
+2. Installieren Sie die notwendigen Abhängigkeiten.
+3. Starten Sie den lokalen Entwicklungsserver.
+
+```bash
+git clone [Repository-URL]
+cd [Repository-Name]
+npm install
+npm start

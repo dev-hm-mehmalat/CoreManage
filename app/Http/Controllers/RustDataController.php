@@ -15,29 +15,28 @@ class RustDataController extends Controller
         $entries = DB::table('projekrusta')->get();
         return response()->json($entries);
     }
+/**
+ * Einen neuen Eintrag zur `projekrusta` Tabelle hinzufügen.
+ */
+public function store(Request $request)
+{
+    // Validierung
+    $validatedData = $request->validate([
+        'data' => 'required|string|max:255',
+        'name' => 'required|string|max:255',
+        'beschreibung' => 'required|string|max:1000',
+        'startdatum' => 'required|date',
+    ]);
 
-    /**
-     * Einen neuen Eintrag zur `projekrusta` Tabelle hinzufügen.
-     */
-    public function store(Request $request)
-    {
-        // Die composer.lock-Datei lesen
-          // Hier können Sie die Daten aus dem Request oder anderen Quellen abrufen
-          $data = 'Ihre Daten'; // Hier Ihre Daten setzen
-          $name = 'Standardwert'; // Hier Ihren Standardwert setzen
-          $beschreibung = 'Ihre Beschreibung'; // Hier Ihre Beschreibung setzen
-          $startdatum = '2023-10-24'; // Hier das gewünschte Startdatum setzen
+    $id = DB::table('projekrusta')->insertGetId([
+        'data' => $validatedData['data'],
+        'name' => $validatedData['name'],
+        'beschreibung' => $validatedData['beschreibung'],
+        'startdatum' => $validatedData['startdatum'],
+    ]);
 
-
-
-            $id = DB::table('projekrusta')->insertGetId([
-                'data' => $data,
-                'name' => $name,
-              'beschreibung' => $beschreibung, // Hinzufügen der Beschreibung
-                'startdatum' => $startdatum,
-            ]);
-        }
-
+    return response()->json(['message' => 'Eintrag erfolgreich hinzugefügt', 'id' => $id]);
+}
 
     /**
      * Einen bestimmten Eintrag aus der `projekrusta` Tabelle löschen.
@@ -46,9 +45,5 @@ class RustDataController extends Controller
     {
         DB::table('projekrusta')->where('id', $id)->delete();
         return response()->json(['message' => 'Eintrag erfolgreich gelöscht']);
-      }
-
-   }
-
-
-
+    }
+}
