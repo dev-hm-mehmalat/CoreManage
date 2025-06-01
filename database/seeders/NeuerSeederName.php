@@ -12,12 +12,10 @@ class NeuerSeederName extends Seeder
      */
     public function run(): void
     {
-        // Fügen Sie hier Ihre Daten in die Datenbank ein
         DB::table('projekrusta')->insert([
             'data' => 'Ihre Daten',
-            'name' => 'Standardwert'
+            'name' => 'Standardwert',
+            'beschreibung' => 'Dies ist eine Testbeschreibung' // Pflichtfeld hinzugefügt!
         ]);
-
-        // Weitere Daten hier einfügen
     }
 }
